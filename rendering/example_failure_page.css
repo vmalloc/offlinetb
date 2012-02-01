@@ -73,7 +73,6 @@
 .offlinetb-lines-before, .offlinetb-lines-after {
   background: black;
   color: white;
-  display: none;
   overflow: hidden;
 }
 

@@ -21,7 +21,8 @@ function offlinetb_format_tb(traceback) {
         var frame = offlinetb_format_frame(traceback[i])
         traceback_div.append(frame);
         if (i == traceback.length - 1) {
-            frame.click();
+            frame.addClass("expanded");
+            frame.find(".offlinetb-lines-before, .offlinetb-lines-after, .offlinetb-show-vars-btn").show();
         }
     }
     return traceback_div;
@@ -61,12 +62,13 @@ function offlinetb_format_frame_lines(frame) {
     var returned = $('<div class="offlinetb-lines"></div>');
     var lines_before = $('<div class="offlinetb-lines-before"></div>');
     var lines_after  = $('<div class="offlinetb-lines-after"></div>');
+    lines_before.hide();
+    lines_after.hide();
     returned.append(lines_before);
     _offlinetb_add_lines(frame.lineno - frame.lines_before.length, frame.lines_before, lines_before);
     _offlinetb_add_line(frame.lineno, frame.line, returned).addClass('offlinetb-faulty');
     returned.append(lines_after);
     _offlinetb_add_lines(frame.lineno + 1, frame.lines_after, lines_after);
-
     return returned;
 }
 

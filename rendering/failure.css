@@ -1,0 +1,95 @@
+.offlinetb-btn {
+    background-color: #eee;
+    background-image: -moz-linear-gradient(top, #eee, #bbb);
+    background-image: -webkit-linear-gradient(top, #eee, #bbb);
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    padding: 0.5em;
+    display: inline-block;
+    user-select: none;
+    border-radius: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.offlinetb-exception, .offlinetb-traceback {
+    padding: 1em;
+    background: #ccc;
+    border: 1px gray solid;
+    box-shadow: inset 0px 0px 5px 5px #bbb;
+}
+
+.offlinetb-exception {
+    cursor: pointer;
+}
+.offlinetb-btn:hover {
+    background-color: #bbb;
+    background-image: -moz-linear-gradient(top, #bbb, #999);
+    background-image: -webkit-linear-gradient(top, #bbb, #999);
+
+}
+
+.offlinetb-expandable-variable-btn {
+    background-color: #eee;
+    background-image: -moz-linear-gradient(top, #eee, #bbb);
+    background-image: -webkit-linear-gradient(top, #eee, #bbb);
+    cursor: pointer;
+}
+
+.offlinetb-frame {
+    background: #eee;
+    padding: 1em;
+    margin-bottom: 0.5em;
+    cursor: pointer;
+}
+
+.offlinetb-lines {
+    padding: 5px;
+    border: 1px silver solid;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.offlinetb .offlinetb-line {
+  font-family: "Courier New", monospace;
+  padding: 2px;
+  white-space: pre;
+}
+
+.offlinetb-line.offlinetb-faulty {
+    background-color: #F5E695;
+}
+
+.offlinetb-frame.expanded {
+    background: white;
+}
+
+.offlinetb-frame.expanded .offlinetb-line.offlinetb-faulty {
+    background-color: #FAA732;
+    background-image: -moz-linear-gradient(top, #fbb450, #f89406);
+    background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
+}
+
+.offlinetb-lines-before, .offlinetb-lines-after {
+  background: black;
+  color: white;
+  display: none;
+  overflow: hidden;
+}
+
+.offlinetb-vars {
+    background: #eee;
+    border: silver solid 1px;
+    cursor: default;
+    padding: 1em;
+}
+
+table.offlinetb-vars-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+table.offlinetb-vars-table td {
+    border: 1px silver solid;
+    padding: 5px;
+}

@@ -80,6 +80,10 @@ class OfflineTbTest(TestCase):
             self.assertEquals(var['type'], str(Object))
             value = self._find_var_by_name(var['vars'], 'value')
             self.assertValue(value, index)
+    def test__nonprintable_objects(self):
+        v = self._find_var_by_name(self.g_frame['vars'], 'some_unprintable_obj')
+        self.assertEquals(v['value'], ERROR_STRING)
+        self.assertEquals(v['type'], repr(NonPrintable))
     def assertValue(self, var, value):
         self.assertEquals(var['type'], repr(type(value)))
         self.assertEquals(literal_eval(var['value']), value)
@@ -212,6 +216,11 @@ class OldStyleObj:
         raise NotImplementedError() # pragma: no cover
 
 
+class NonPrintable(object):
+    def __repr__(self):
+        raise Exception("!")
+
+
 def f():
     f_linebefore_2 = f_linebefore_1 = 0
     f_value1 = F_VALUE1
@@ -238,6 +247,7 @@ def f():
 def g():
     some_type = SomeException
     some_list = [Object(value=i) for i in range(NUM_ITEMS_IN_LIST)]
+    some_unprintable_obj = NonPrintable()
     g_linebefore_1 = g_linebefore_2 = 0
     g_linebefore_1
     g_linebefore_2

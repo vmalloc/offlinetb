@@ -61,7 +61,7 @@ def _distill_vars(vars, max_depth):
         if value is _CANNOT_GET:
             var_dict = dict(name=name, type=ERROR_STRING, value=ERROR_STRING)
         else:
-            var_dict = dict(name=name, type=str(type(value)), value=repr(value))
+            var_dict = dict(name=name, type=str(type(value)), value=_safe_repr(value))
         if _can_query_variables(value):
             var_dict.update(vars=_distill_vars(value, max_depth-1))
         returned.append(var_dict)
@@ -106,3 +106,8 @@ def _splice_lines(lines, pivot, margin):
     return (lines[max(0, pivot-margin):pivot],
             lines[pivot],
             lines[pivot+1:pivot+1+margin])
+def _safe_repr(obj):
+    try:
+        return repr(obj)
+    except:
+        return ERROR_STRING

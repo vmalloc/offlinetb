@@ -14,14 +14,20 @@
 
 .offlinetb-exception, .offlinetb-traceback {
     padding: 1em;
-    background: #ccc;
     border: 1px gray solid;
-    box-shadow: inset 0px 0px 5px 5px #bbb;
 }
 
 .offlinetb-exception {
+    background: #FCE28B;
+    box-shadow: inset 0px 0px 5px 5px rgba(255, 0, 0, 0.2);
     cursor: pointer;
 }
+
+.offlinetb-traceback {
+    background: #ccc;
+    box-shadow: inset 0px 0px 5px 5px #bbb;
+}
+
 .offlinetb-btn:hover {
     background-color: #bbb;
     background-image: -moz-linear-gradient(top, #bbb, #999);

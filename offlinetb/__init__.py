@@ -7,7 +7,11 @@ from platform import python_version
 _PY_3 = python_version() >= '3.0'
 
 ERROR_STRING = '[ERROR]'
+TOO_LARGE_ERROR_STRING = '[TOO LARGE]'
+DEFAULT_LENGTH_LIMIT = 8000
+
 _CANNOT_GET = object()
+
 _FILTERED_TYPES = [types.MethodType, types.FunctionType, type]
 if _PY_3:
     basestring = str
@@ -17,7 +21,7 @@ else:
     _FILTERED_TYPES.append(types.ClassType)
     iteritems = dict.iteritems
 
-def distill(exc_info=None, num_extra_lines=5, var_depth=2):
+def distill(exc_info=None, num_extra_lines=5, var_depth=2, object_length_limit=DEFAULT_LENGTH_LIMIT):
     if exc_info is None:
         exc_info = sys.exc_info()
     exc_type, exc_value, exc_tb = exc_info
@@ -26,13 +30,13 @@ def distill(exc_info=None, num_extra_lines=5, var_depth=2):
         exception=dict(
             type=str(exc_type),
             value=str(exc_value),
-            vars=_distill_vars(exc_value, var_depth)
+            vars=_distill_vars(exc_value, var_depth, object_length_limit)
             ),
-        traceback=_distill_traceback(exc_tb, num_extra_lines, var_depth),
+        traceback=_distill_traceback(exc_tb, num_extra_lines, var_depth, object_length_limit),
         )
     return returned
 
-def _distill_traceback(tb, num_extra_lines, var_depth):
+def _distill_traceback(tb, num_extra_lines, var_depth, object_length_limit):
     returned = []
     while tb:
         filename = tb.tb_frame.f_code.co_filename
@@ -46,26 +50,33 @@ def _distill_traceback(tb, num_extra_lines, var_depth):
             lines_before = lines_before,
             lines_after  = lines_after,
             line = line,
-            vars = _distill_vars(tb.tb_frame.f_locals, var_depth)
+            vars = _distill_vars(tb.tb_frame.f_locals, var_depth, object_length_limit)
             )
         returned.append(frame)
         tb = tb.tb_next
     return returned
 
-def _distill_vars(vars, max_depth):
+def _distill_vars(vars, max_depth, object_length_limit):
     assert max_depth >= 0
     if not max_depth:
         return None
     returned = []
     for name, value in sorted(_get_vars_items(vars)):
+        var_dict = dict(name=name)
         if value is _CANNOT_GET:
-            var_dict = dict(name=name, type=ERROR_STRING, value=ERROR_STRING)
+            var_dict.update(type=ERROR_STRING, value=ERROR_STRING)
+        elif _is_object_too_long(value, object_length_limit):
+            var_dict.update(type=str(type(value)), value=TOO_LARGE_ERROR_STRING)
         else:
-            var_dict = dict(name=name, type=str(type(value)), value=_safe_repr(value))
-        if _can_query_variables(value):
-            var_dict.update(vars=_distill_vars(value, max_depth-1))
+            var_dict.update(type=str(type(value)), value=_safe_repr(value))
+            if _can_query_variables(value):
+                var_dict.update(vars=_distill_vars(value, max_depth-1, object_length_limit))
         returned.append(var_dict)
     return returned
+
+def _is_object_too_long(obj, length_limit):
+    return hasattr(obj, '__len__') and not isinstance(obj, type) and len(obj) > length_limit
+
 def _get_vars_items(vars):
     if type(vars) is dict:
         return ((str(k), v) for k, v in iteritems(vars))

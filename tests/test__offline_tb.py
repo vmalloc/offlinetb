@@ -8,7 +8,13 @@ try:
 except ImportError:
     from unittest import TestCase
 
-from offlinetb import distill, _splice_lines, ERROR_STRING
+from offlinetb import (
+    distill,
+    _splice_lines,
+    ERROR_STRING,
+    DEFAULT_LENGTH_LIMIT,
+    TOO_LARGE_ERROR_STRING,
+    )
 
 _PY_3 = platform.python_version() >= '3.0'
 if _PY_3:
@@ -84,6 +90,10 @@ class OfflineTbTest(TestCase):
         v = self._find_var_by_name(self.g_frame['vars'], 'some_unprintable_obj')
         self.assertEquals(v['value'], ERROR_STRING)
         self.assertEquals(v['type'], repr(NonPrintable))
+    def test__size_limit(self):
+        v = self._find_var_by_name(self.g_frame['vars'], 'too_large')
+        self.assertEquals(v['value'], TOO_LARGE_ERROR_STRING)
+        self.assertNotIn('vars', v)
     def assertValue(self, var, value):
         self.assertEquals(var['type'], repr(type(value)))
         self.assertEquals(literal_eval(var['value']), value)
@@ -189,6 +199,8 @@ class Object(object):
     def ungettable_property(self):
         raise NotImplementedError() # pragma: no cover
 
+TOO_LARGE_OBJECT = list(range(DEFAULT_LENGTH_LIMIT + 1))
+
 F_VALUE1, OBJ_VALUE, OLDSTYLE_OBJ_VALUE, REGULAR_PROPERTY_VALUE = range(4)
 NUM_ITEMS_IN_LIST = 5
 
@@ -246,6 +258,7 @@ def f():
 
 def g():
     some_type = SomeException
+    too_large = TOO_LARGE_OBJECT
     some_list = [Object(value=i) for i in range(NUM_ITEMS_IN_LIST)]
     some_unprintable_obj = NonPrintable()
     g_linebefore_1 = g_linebefore_2 = 0

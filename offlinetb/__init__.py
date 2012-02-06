@@ -74,8 +74,10 @@ def _distill_vars(vars, max_depth, object_length_limit):
         returned.append(var_dict)
     return returned
 
+_SIMPLE_SEQUENCE_TYPES = set([tuple, list, dict, set, frozenset])
+
 def _is_object_too_long(obj, length_limit):
-    return hasattr(obj, '__len__') and not isinstance(obj, type) and len(obj) > length_limit
+    return type(obj) in _SIMPLE_SEQUENCE_TYPES and len(obj) > length_limit
 
 def _get_vars_items(vars):
     if type(vars) is dict:

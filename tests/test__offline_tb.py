@@ -228,12 +228,17 @@ class OldStyleObj:
         raise NotImplementedError() # pragma: no cover
 
 
+class LengthThrowsException(object):
+    def __len__(self):
+        raise Exception("!")
+
 class NonPrintable(object):
     def __repr__(self):
         raise Exception("!")
 
 
 def f():
+    with_raising_len = LengthThrowsException()
     f_linebefore_2 = f_linebefore_1 = 0
     f_value1 = F_VALUE1
     obj = Object(

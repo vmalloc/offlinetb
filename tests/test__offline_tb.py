@@ -138,6 +138,22 @@ class RenderingExampleTest(TestCase):
         decoded = JSONDecoder().decode(self.data)
         validate_schema(decoded)
 
+class NonPrintableExceptionTest(TestCase):
+    def setUp(self):
+        super(NonPrintableExceptionTest, self).setUp()
+        try:
+            raise NonPrintableException()
+        except NonPrintableException:
+            self.offlinetb = distill()
+    def test__non_printable_exception(self):
+        self.assertEquals(self.offlinetb['exception']['value'], ERROR_STRING)
+
+class NonPrintableException(Exception):
+    def __repr__(self):
+        raise Exception("!")
+    def __str__(self):
+        raise Exception("!!")
+
 class LineSpliceTest(TestCase):
     def test__linesplice(self):
         nums = list(range(1, 11))
@@ -275,4 +291,3 @@ def g():
 
 class SomeException(Exception):
     pass
-

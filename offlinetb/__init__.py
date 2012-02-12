@@ -29,7 +29,7 @@ def distill(exc_info=None, num_extra_lines=5, var_depth=2, object_length_limit=D
     returned.update(
         exception=dict(
             type=str(exc_type),
-            value=str(exc_value),
+            value=_safe_str(exc_value),
             vars=_distill_vars(exc_value, var_depth, object_length_limit)
             ),
         traceback=_distill_traceback(exc_tb, num_extra_lines, var_depth, object_length_limit),
@@ -122,5 +122,10 @@ def _splice_lines(lines, pivot, margin):
 def _safe_repr(obj):
     try:
         return repr(obj)
+    except:
+        return ERROR_STRING
+def _safe_str(obj):
+    try:
+        return str(obj)
     except:
         return ERROR_STRING

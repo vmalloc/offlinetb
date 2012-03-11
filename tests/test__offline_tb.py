@@ -155,11 +155,14 @@ class NonPrintableException(Exception):
         raise Exception("!!")
 
 class LineSpliceTest(TestCase):
+    def setUp(self):
+        super(LineSpliceTest, self).setUp()
+        self.nums = list(range(1, 11))
     def test__linesplice(self):
-        nums = list(range(1, 11))
-        self.assertEquals(_splice_lines(nums, 4, 2), ([3, 4], 5, [6, 7]))
-        self.assertEquals(_splice_lines(nums, 1, 2), ([1], 2, [3, 4]))
-        self.assertEquals(_splice_lines(nums, 1, 10), ([1], 2, [3, 4, 5, 6, 7, 8, 9, 10]))
+        self.assertEquals(_splice_lines(self.nums, 4, 2), ([3, 4], 5, [6, 7]))
+        self.assertEquals(_splice_lines(self.nums, 1, 2), ([1], 2, [3, 4]))
+        self.assertEquals(_splice_lines(self.nums, 1, 10), ([1], 2, [3, 4, 5, 6, 7, 8, 9, 10]))
+        self.assertEquals(_splice_lines([], 5, 20), ([], None, []))
 
 def validate_schema(tb):
     assert type(tb) is dict

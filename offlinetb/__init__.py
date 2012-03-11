@@ -116,6 +116,8 @@ if not _PY_3:
     _LEAF_TYPES.add(types.UnboundMethodType)
 
 def _splice_lines(lines, pivot, margin):
+    if pivot >= len(lines):
+        return ([], None, [])
     return (lines[max(0, pivot-margin):pivot],
             lines[pivot],
             lines[pivot+1:pivot+1+margin])

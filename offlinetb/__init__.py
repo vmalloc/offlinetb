@@ -86,7 +86,7 @@ def _get_vars_items(vars):
         return ((str(index), value) for index, value in enumerate(vars))
     return _attribute_iterator(vars)
 def _attribute_iterator(obj):
-    for attr in dir(obj):
+    for attr in _safe_dir(obj):
         if attr.startswith("__") and attr.endswith("__"):
             continue
         try:
@@ -121,13 +121,18 @@ def _splice_lines(lines, pivot, margin):
     return (lines[max(0, pivot-margin):pivot],
             lines[pivot],
             lines[pivot+1:pivot+1+margin])
+def _safe_dir(obj):
+    try:
+        return dir(obj)
+    except Exception:
+        return []
 def _safe_repr(obj):
     try:
         return repr(obj)
-    except:
+    except Exception:
         return ERROR_STRING
 def _safe_str(obj):
     try:
         return str(obj)
-    except:
+    except Exception:
         return ERROR_STRING

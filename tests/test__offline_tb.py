@@ -90,6 +90,11 @@ class OfflineTbTest(TestCase):
         v = self._find_var_by_name(self.g_frame['vars'], 'some_unprintable_obj')
         self.assertEquals(v['value'], ERROR_STRING)
         self.assertEquals(v['type'], repr(NonPrintable))
+    def test__nondirable_objects(self):
+        with self.assertRaises(NotImplementedError):
+            dir(NonDirable())
+        v = self._find_var_by_name(self.f_frame['vars'], 'nondirable')
+        self.assertEquals(v['vars'], [])
     def test__size_limit(self):
         v = self._find_var_by_name(self.g_frame['vars'], 'too_large')
         self.assertEquals(v['value'], TOO_LARGE_ERROR_STRING)
@@ -255,6 +260,9 @@ class NonPrintable(object):
     def __repr__(self):
         raise Exception("!")
 
+class NonDirable(object):
+    def __dir__(self):
+        raise NotImplementedError() # pragma: no cover
 
 def f():
     with_raising_len = LengthThrowsException()
@@ -273,6 +281,7 @@ def f():
         )
     unicode_variable = unicode("hello")
     boolean = True
+    nondirable = NonDirable()
     oldstyle_obj = OldStyleObj(value=OLDSTYLE_OBJ_VALUE)
     f_linebefore_1
     f_linebefore_2

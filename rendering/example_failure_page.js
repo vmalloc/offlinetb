@@ -127,7 +127,7 @@ function offlinetb_format_vars_table(vars) {
         var v = $('<tr></tr>');
         _offlinetb_append_cell(v, vars[i].name);
         var value_td = _offlinetb_append_cell(v, vars[i].value);
-        if (vars[i].hasOwnProperty('vars')  && vars[i]['vars'].length > 0) {
+        if (vars[i].hasOwnProperty('vars') && vars[i]['vars'] != null && vars[i]['vars'].length > 0) {
             value_td.addClass('offlinetb-expandable-variable-btn');
             value_td.append(" &rarr;")
             value_td.data('vars', vars[i].vars);

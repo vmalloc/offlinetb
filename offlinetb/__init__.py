@@ -40,7 +40,7 @@ def _distill_traceback(tb, num_extra_lines, var_depth, object_length_limit):
     returned = []
     while tb:
         filename = tb.tb_frame.f_code.co_filename
-        lineno = tb.tb_frame.f_lineno
+        lineno = tb.tb_lineno
         lines = linecache.getlines(filename)
         lines_before, line, lines_after = _splice_lines(lines, lineno-1, num_extra_lines)
         frame = dict(

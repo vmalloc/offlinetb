@@ -3,10 +3,7 @@ import itertools
 import os
 import platform
 from json import JSONDecoder, JSONEncoder
-try:
-    from unittest2 import TestCase
-except ImportError:
-    from unittest import TestCase
+from unittest import TestCase
 
 from offlinetb import (
     distill,

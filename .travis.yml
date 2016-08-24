@@ -1,12 +1,18 @@
 language: python
 python:
-  - 2.7
-  - 3.4
-  - 3.5
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+- 2.7
+- 3.4
+- 3.5
 install:
-  - pip install -e .
-  - pip install pytest
-# command to run tests, e.g. python setup.py test
+- pip install -e .
+- pip install pytest
 script:
-  - py.test tests
+- py.test tests
+deploy:
+  provider: pypi
+  user: vmalloc
+  password:
+    secure: giXZsyhd5NgpTbOKIF1XN1cD5uuDYmadlgz2LzLCghxuhwv8ZVhSzrnuGOJEQBqXqNSsR2MkX7u3epAB9v2/9TOelcHpfTrOARnouL21CKWLH/UMP5JpKnaNRB6K5AZTcHpGDUqY7NrU/tYM9Qdo0Fgllsr+6f4IY1SkqPUi+3A=
+  on:
+    tags: true
+    repo: vmalloc/offlinetb

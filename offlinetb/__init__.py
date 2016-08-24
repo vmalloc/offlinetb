@@ -2,6 +2,7 @@ from .__version__ import __version__
 import linecache
 import sys
 import types
+import warnings
 from platform import python_version
 
 _PY_3 = python_version() >= '3.0'
@@ -37,23 +38,24 @@ def distill(exc_info=None, num_extra_lines=5, var_depth=2, object_length_limit=D
     return returned
 
 def _distill_traceback(tb, num_extra_lines, var_depth, object_length_limit):
-    returned = []
-    while tb:
-        filename = tb.tb_frame.f_code.co_filename
-        lineno = tb.tb_lineno
-        lines = linecache.getlines(filename)
-        lines_before, line, lines_after = _splice_lines(lines, lineno-1, num_extra_lines)
-        frame = dict(
-            filename = filename,
-            function = tb.tb_frame.f_code.co_name,
-            lineno   = lineno,
-            lines_before = lines_before,
-            lines_after  = lines_after,
-            line = line,
-            vars = _distill_vars(tb.tb_frame.f_locals, var_depth, object_length_limit)
-            )
-        returned.append(frame)
-        tb = tb.tb_next
+    with warnings.catch_warnings(record=True):
+        returned = []
+        while tb:
+            filename = tb.tb_frame.f_code.co_filename
+            lineno = tb.tb_lineno
+            lines = linecache.getlines(filename)
+            lines_before, line, lines_after = _splice_lines(lines, lineno-1, num_extra_lines)
+            frame = dict(
+                filename = filename,
+                function = tb.tb_frame.f_code.co_name,
+                lineno   = lineno,
+                lines_before = lines_before,
+                lines_after  = lines_after,
+                line = line,
+                vars = _distill_vars(tb.tb_frame.f_locals, var_depth, object_length_limit)
+                )
+            returned.append(frame)
+            tb = tb.tb_next
     return returned
 
 def _distill_vars(vars, max_depth, object_length_limit):
